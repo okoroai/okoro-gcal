@@ -28,6 +28,19 @@ done
 [[ -z "$ENDPOINT" ]] && { echo "Error: --endpoint is required" >&2; exit 1; }
 [[ -z "$INTENT"   ]] && { echo "Error: --intent is required" >&2; exit 1; }
 
+if [[ -z "${OKORO_SERVICE_TOKEN:-}" ]]; then
+  echo "" >&2
+  echo "Error: OKORO_SERVICE_TOKEN is not set." >&2
+  echo "" >&2
+  echo "  This skill requires an Okoro service token to authenticate with Google Calendar." >&2
+  echo "  Get your token at: https://hub.okoro.ai/docs/get-token" >&2
+  echo "" >&2
+  echo "  Once you have it, set it in your environment:" >&2
+  echo "    export OKORO_SERVICE_TOKEN=svc_..." >&2
+  echo "" >&2
+  exit 1
+fi
+
 # Infer scope from method if not explicitly set
 if [[ "$SCOPE" == "read" ]]; then
   case "$METHOD" in
@@ -54,7 +67,7 @@ _jwt_exp() {
 _fetch_token() {
   local refresh_token="${1:-}"
   local body
-  body=$(jq -n     --arg provider "gcal"     --arg scope    "$SCOPE"     --arg intent   "$INTENT"     '{provider: $provider, scope: $scope, intent: $intent}')
+  body=$(jq -n     --arg provider "google-calendar"     --arg scope    "$SCOPE"     --arg intent   "$INTENT"     '{provider: $provider, scope: $scope, intent: $intent}')
   [[ -n "$refresh_token" ]] &&     body=$(printf '%s' "$body" | jq --arg t "$refresh_token" '. + {refresh_token: $t}')
 
   local response token exp
@@ -82,7 +95,7 @@ fi
 [[ -z "$TOKEN" ]] && TOKEN=$(_fetch_token "$_expired_token")
 
 # ── Make the request ───────────────────────────────────────────────────────
-PROXY_URL="https://okoro.ai/p/gcal${ENDPOINT}"
+PROXY_URL="https://okoro.ai/p/google-calendar${ENDPOINT}"
 
 if [[ -n "$PAYLOAD" ]]; then
   curl -sf -X "$METHOD" "$PROXY_URL"     -H "Authorization: Bearer ${TOKEN}"     -H "Content-Type: application/json"     -d "$PAYLOAD"
