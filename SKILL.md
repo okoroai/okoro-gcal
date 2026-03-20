@@ -23,8 +23,8 @@ metadata:
       - linux
 ---
 
-You have access to the Gcal skill via the Okoro proxy. Use `scripts/gcal.sh` for all
-Gcal operations. The script caches the session token and refreshes it automatically on expiry.
+You have access to the Google Calendar skill via the Okoro proxy. Use `scripts/gcal.sh` for all
+Google Calendar operations. The script caches the session token and refreshes it automatically on expiry.
 
 ## Usage
 
@@ -37,7 +37,7 @@ skills/gcal/scripts/gcal.sh \
   [--payload <json>]
 ```
 
-- **endpoint** — Gcal API path
+- **endpoint** — Google Calendar API path (relative to `/calendar/v3`)
 - **intent** — why Claude is making this call (5–10 words, reflects the user's goal)
 - **method** — defaults to `GET`; set `POST`/`PUT`/`DELETE` for mutations
 - **scope** — inferred from method if omitted
@@ -45,11 +45,18 @@ skills/gcal/scripts/gcal.sh \
 
 ## Key endpoints
 
-<!-- TODO: document key API endpoints for Gcal -->
-
 | Action | Method | Endpoint |
 |--------|--------|----------|
-| Example | GET | `/example` |
+| List calendars | GET | `/users/me/calendarList` |
+| List events | GET | `/calendars/{calendarId}/events` |
+| Get event | GET | `/calendars/{calendarId}/events/{eventId}` |
+| Create event | POST | `/calendars/{calendarId}/events` |
+| Update event | PUT | `/calendars/{calendarId}/events/{eventId}` |
+| Delete event | DELETE | `/calendars/{calendarId}/events/{eventId}` |
+| Check free/busy | POST | `/freeBusy` |
+| Quick add event | POST | `/calendars/{calendarId}/events/quickAdd` |
+
+Use `primary` as `{calendarId}` for the user's default calendar.
 
 ## Token & scope
 

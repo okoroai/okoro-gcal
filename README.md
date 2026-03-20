@@ -22,13 +22,17 @@ All API calls go through the [okoro proxy](https://okoro.ai), which signs reques
 
 ## How it works
 
-Rather than giving your agent raw Gcal credentials, you configure a **service token** once. When the skill runs, it exchanges that token for a short-lived **operation token** scoped to exactly the action being performed. The okoro proxy signs the request, forwards it to Gcal, and records the intent in an audit log.
+Rather than giving your agent raw Google Calendar credentials, you configure a **service token** once. When the skill runs, it exchanges that token for a short-lived **operation token** scoped to exactly the action being performed. The okoro proxy signs the request, forwards it to Google Calendar, and records the intent in an audit log.
 
 [Learn more about how okoro works →](https://okoro.ai/how-it-works)
 
 ## What your agent can do
 
-<!-- TODO: list operations for this provider -->
+- List all calendars the user has access to
+- Fetch upcoming events from any calendar
+- Create, update, and delete events
+- Check free/busy availability across calendars
+- Quick-add events from natural language (e.g. "Lunch with Alice Tuesday noon")
 
 ## License
 
