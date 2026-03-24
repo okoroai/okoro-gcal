@@ -39,29 +39,30 @@ skills/gcal/scripts/gcal.sh \
 
 - **endpoint** — Google Calendar API path (relative to `/calendar`, i.e. include `/v3/` prefix)
 - **intent** — why Claude is making this call (5–10 words, reflects the user's goal)
-- **method** — defaults to `GET`; set `POST`/`PUT`/`DELETE` for mutations
+- **method** — defaults to `GET`; set `POST`/`PATCH`/`PUT`/`DELETE` for mutations
 - **scope** — inferred from method if omitted
-- **payload** — JSON body for POST/PUT requests
+- **payload** — JSON body for POST/PATCH/PUT requests
 
 ## Key endpoints
 
-| Action | Method | Endpoint |
-|--------|--------|----------|
-| List calendars | GET | `/v3/users/me/calendarList` |
-| List events | GET | `/v3/calendars/{calendarId}/events` |
-| Get event | GET | `/v3/calendars/{calendarId}/events/{eventId}` |
-| Create event | POST | `/v3/calendars/{calendarId}/events` |
-| Update event | PUT | `/v3/calendars/{calendarId}/events/{eventId}` |
-| Delete event | DELETE | `/v3/calendars/{calendarId}/events/{eventId}` |
-| Check free/busy | POST | `/v3/freeBusy` |
-| Quick add event | POST | `/v3/calendars/{calendarId}/events/quickAdd` |
+| Action | Method | Endpoint | Min scope |
+|--------|--------|----------|-----------|
+| List calendars | GET | `/v3/users/me/calendarList` | `read` |
+| List events | GET | `/v3/calendars/{calendarId}/events` | `read` |
+| Get event | GET | `/v3/calendars/{calendarId}/events/{eventId}` | `read` |
+| Create event | POST | `/v3/calendars/{calendarId}/events` | `write` |
+| Quick add event | POST | `/v3/calendars/{calendarId}/events/quickAdd` | `write` |
+| Update event | PATCH | `/v3/calendars/{calendarId}/events/{eventId}` | `update` |
+| Replace event | PUT | `/v3/calendars/{calendarId}/events/{eventId}` | `update` |
+| Delete event | DELETE | `/v3/calendars/{calendarId}/events/{eventId}` | `delete` |
+| Check free/busy | POST | `/v3/freeBusy` | `all` |
 
 Use `primary` as `{calendarId}` for the user's default calendar.
 
 ## Token & scope
 
 `OKORO_SERVICE_TOKEN` must have at least the required scope level:
-`read` < `write` < `update` < `delete`
+`read` < `write` < `update` < `delete` < `all`
 
 ## Intent
 
