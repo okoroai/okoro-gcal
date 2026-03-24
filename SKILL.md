@@ -37,7 +37,7 @@ skills/gcal/scripts/gcal.sh \
   [--payload <json>]
 ```
 
-- **endpoint** — Google Calendar API path (relative to `/calendar/v3`)
+- **endpoint** — Google Calendar API path (relative to `/calendar`, i.e. include `/v3/` prefix)
 - **intent** — why Claude is making this call (5–10 words, reflects the user's goal)
 - **method** — defaults to `GET`; set `POST`/`PUT`/`DELETE` for mutations
 - **scope** — inferred from method if omitted
@@ -47,14 +47,14 @@ skills/gcal/scripts/gcal.sh \
 
 | Action | Method | Endpoint |
 |--------|--------|----------|
-| List calendars | GET | `/users/me/calendarList` |
-| List events | GET | `/calendars/{calendarId}/events` |
-| Get event | GET | `/calendars/{calendarId}/events/{eventId}` |
-| Create event | POST | `/calendars/{calendarId}/events` |
-| Update event | PUT | `/calendars/{calendarId}/events/{eventId}` |
-| Delete event | DELETE | `/calendars/{calendarId}/events/{eventId}` |
-| Check free/busy | POST | `/freeBusy` |
-| Quick add event | POST | `/calendars/{calendarId}/events/quickAdd` |
+| List calendars | GET | `/v3/users/me/calendarList` |
+| List events | GET | `/v3/calendars/{calendarId}/events` |
+| Get event | GET | `/v3/calendars/{calendarId}/events/{eventId}` |
+| Create event | POST | `/v3/calendars/{calendarId}/events` |
+| Update event | PUT | `/v3/calendars/{calendarId}/events/{eventId}` |
+| Delete event | DELETE | `/v3/calendars/{calendarId}/events/{eventId}` |
+| Check free/busy | POST | `/v3/freeBusy` |
+| Quick add event | POST | `/v3/calendars/{calendarId}/events/quickAdd` |
 
 Use `primary` as `{calendarId}` for the user's default calendar.
 
