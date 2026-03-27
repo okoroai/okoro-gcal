@@ -37,11 +37,11 @@ skills/gcal/scripts/gcal.sh \
   [--payload <json>]
 ```
 
-- **endpoint** — Google Calendar API path (relative to `/calendar`, i.e. include `/v3/` prefix)
+- **endpoint** — Google Calendar API path including query parameters (e.g. `/v3/calendars/primary/events?maxResults=10&timeMin=2026-01-01T00:00:00Z`)
 - **intent** — why Claude is making this call (5–10 words, reflects the user's goal)
 - **method** — defaults to `GET`; set `POST`/`PATCH`/`PUT`/`DELETE` for mutations
 - **scope** — inferred from method if omitted
-- **payload** — JSON body for POST/PATCH/PUT requests
+- **payload** — JSON body for POST/PATCH/PUT requests only. **Never use `--payload` with GET or HEAD** — pass filters and options as query parameters in `--endpoint` instead.
 
 ## Key endpoints
 
