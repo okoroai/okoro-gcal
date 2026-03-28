@@ -4,7 +4,7 @@ description: "Manage Google Calendar events, check availability, and schedule me
 version: 1.0.0
 
 # Claude Code fields
-argument-hint: "--endpoint /<resource> --intent \"describe action\""
+argument-hint: "--endpoint /<resource> --intent \"user's goal, not the API call\""
 allowed-tools: Bash
 
 # OpenClaw fields
@@ -78,7 +78,7 @@ Use `primary` as `{calendarId}` for the user's default calendar.
 ```bash
 skills/gcal/scripts/gcal.sh \
   --endpoint "/v3/calendars/primary/events?maxResults=10&orderBy=startTime&singleEvents=true&timeMin=$(date -u +%Y-%m-%dT%H:%M:%SZ)" \
-  --intent "show upcoming calendar events"
+  --intent "show me what's on my calendar this week"
 ```
 
 **Create an event:**
@@ -86,7 +86,7 @@ skills/gcal/scripts/gcal.sh \
 # start and end dateTime are required; summary (title) is strongly recommended
 skills/gcal/scripts/gcal.sh --method POST \
   --endpoint /v3/calendars/primary/events \
-  --intent "schedule team meeting" \
+  --intent "schedule a team sync for next Tuesday" \
   --payload '{
     "summary": "Team sync",
     "start": {"dateTime": "2026-04-01T10:00:00+00:00"},
@@ -99,7 +99,7 @@ skills/gcal/scripts/gcal.sh --method POST \
 # text goes as a query parameter — no --payload
 skills/gcal/scripts/gcal.sh --method POST \
   --endpoint "/v3/calendars/primary/events/quickAdd?text=Lunch+with+Bob+tomorrow+at+noon" \
-  --intent "add lunch event from user message"
+  --intent "add lunch with Bob to the calendar"
 ```
 
 **Patch an event (partial update):**
@@ -107,7 +107,7 @@ skills/gcal/scripts/gcal.sh --method POST \
 # Only send the fields to change — other fields are preserved
 skills/gcal/scripts/gcal.sh --method PATCH \
   --endpoint /v3/calendars/primary/events/<eventId> \
-  --intent "reschedule meeting" \
+  --intent "move Tuesday's standup to Wednesday morning" \
   --payload '{"start":{"dateTime":"2026-04-02T10:00:00+00:00"},"end":{"dateTime":"2026-04-02T11:00:00+00:00"}}'
 ```
 
@@ -116,7 +116,7 @@ skills/gcal/scripts/gcal.sh --method PATCH \
 # Must pass --scope all — POST alone would only get write scope
 skills/gcal/scripts/gcal.sh --method POST --scope all \
   --endpoint /v3/freeBusy \
-  --intent "find free slot for team meeting" \
+  --intent "find a free slot for the team planning meeting" \
   --payload '{
     "timeMin": "2026-04-01T00:00:00Z",
     "timeMax": "2026-04-07T00:00:00Z",
@@ -129,7 +129,8 @@ skills/gcal/scripts/gcal.sh --method POST --scope all \
 `--intent` is the **session intent** — the user's overall goal for this conversation, not a description of the individual API call. It is logged by the proxy as the audit reason for every token issued in this session. Pass the same value for every call you make within a single user request.
 
 ```
---intent "find a free slot for a team meeting next week"   ✓  (why the user asked)
---intent "query freeBusy endpoint"                          ✗  (describes the API call)
---intent "get calendar events"                              ✗  (too vague, still call-level)
+--intent "find a free slot for a team meeting next week"          ✓  (why the user asked)
+--intent "show me what's on my calendar this week"                ✓  (why the user asked)
+--intent "query freeBusy endpoint"                                ✗  (describes the API call)
+--intent "get calendar events"                                    ✗  (too vague, still call-level)
 ```
